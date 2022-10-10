@@ -117,7 +117,7 @@ for:
             $env:NINJA_STATUS="[%r processes, %f/%t @ %o/s : %es] "
           }
       - gclient config --name "src\electron" --unmanaged %GCLIENT_EXTRA_ARGS% "https://github.com/electron/electron"
-      # Patches are applied in the image bake. Check depshash to see if patches have changed. 
+      # Patches are applied in the image bake. Check depshash to see if patches have changed.
       - ps: $env:RUN_GCLIENT_SYNC="false"
       - ps: $depshash_baked = Get-Content .\src\.depshash -Raw
       - ps: cd src\electron
