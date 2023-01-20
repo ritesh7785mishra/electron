@@ -7,10 +7,10 @@ With WCO, allow chromium to handle synthetic mouse events generated for touch
 actions in the non-client caption area.
 
 diff --git a/ui/views/widget/desktop_aura/desktop_window_tree_host_win.cc b/ui/views/widget/desktop_aura/desktop_window_tree_host_win.cc
-index f6b37bdec2343d45447b419aeadbe2aa19493c3c..bdbf7153f27376bd68459f9cb480bff7485c9e98 100644
+index a38b2752f76194de52685a4cefa17756b5d3b79d..abf3fe4637d1774dd59d93ef6cdaefc58b4c282c 100644
 --- a/ui/views/widget/desktop_aura/desktop_window_tree_host_win.cc
 +++ b/ui/views/widget/desktop_aura/desktop_window_tree_host_win.cc
-@@ -1169,6 +1169,10 @@ void DesktopWindowTreeHostWin::HandleWindowScaleFactorChanged(
+@@ -1204,6 +1204,10 @@ void DesktopWindowTreeHostWin::HandleWindowScaleFactorChanged(
    }
  }
  
@@ -22,10 +22,10 @@ index f6b37bdec2343d45447b419aeadbe2aa19493c3c..bdbf7153f27376bd68459f9cb480bff7
  DesktopWindowTreeHostWin::GetSingletonDesktopNativeCursorManager() {
    return new DesktopNativeCursorManagerWin();
 diff --git a/ui/views/widget/desktop_aura/desktop_window_tree_host_win.h b/ui/views/widget/desktop_aura/desktop_window_tree_host_win.h
-index 0aae49ec83b88057434af5bbfb54b10e53469918..058e5dc978e76a71fa02dc9e275592f3c39befea 100644
+index b23ba1bf3a49f72d1cd0f0ae4b0f316e7c15fa76..bf0a4869af4aaca15074fae42508b54aef611cf6 100644
 --- a/ui/views/widget/desktop_aura/desktop_window_tree_host_win.h
 +++ b/ui/views/widget/desktop_aura/desktop_window_tree_host_win.h
-@@ -263,6 +263,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostWin
+@@ -258,6 +258,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostWin
    void HandleWindowSizeChanging() override;
    void HandleWindowSizeUnchanged() override;
    void HandleWindowScaleFactorChanged(float window_scale_factor) override;
@@ -34,10 +34,10 @@ index 0aae49ec83b88057434af5bbfb54b10e53469918..058e5dc978e76a71fa02dc9e275592f3
    Widget* GetWidget();
    const Widget* GetWidget() const;
 diff --git a/ui/views/win/hwnd_message_handler.cc b/ui/views/win/hwnd_message_handler.cc
-index 3b546cf67089e6677fc668b4d1d6c0863282dff5..c6810f162806b36494885b2f63982a756d4dcd38 100644
+index 631393000c825ab953014b82b342d323d87c28bc..a15abb9c3b295185852cc2641c1ee3e653548d29 100644
 --- a/ui/views/win/hwnd_message_handler.cc
 +++ b/ui/views/win/hwnd_message_handler.cc
-@@ -3129,15 +3129,19 @@ LRESULT HWNDMessageHandler::HandleMouseEventInternal(UINT message,
+@@ -3131,15 +3131,19 @@ LRESULT HWNDMessageHandler::HandleMouseEventInternal(UINT message,
        SetMsgHandled(FALSE);
      // We must let Windows handle the caption buttons if it's drawing them, or
      // they won't work.
@@ -60,10 +60,10 @@ index 3b546cf67089e6677fc668b4d1d6c0863282dff5..c6810f162806b36494885b2f63982a75
    }
  
 diff --git a/ui/views/win/hwnd_message_handler_delegate.h b/ui/views/win/hwnd_message_handler_delegate.h
-index 5dbb192d0840ca0ded61397c399b774a8cb05cce..098a9c3140e9e140fdc8f0dc9cf4e8ec84451221 100644
+index da6afe2ae8940faebe3fbacfd7780fa0d5b1591a..4263d68e8b01eb961ab0e38d6b64b0c0b24146eb 100644
 --- a/ui/views/win/hwnd_message_handler_delegate.h
 +++ b/ui/views/win/hwnd_message_handler_delegate.h
-@@ -258,6 +258,10 @@ class VIEWS_EXPORT HWNDMessageHandlerDelegate {
+@@ -251,6 +251,10 @@ class VIEWS_EXPORT HWNDMessageHandlerDelegate {
    // Called when the window scale factor has changed.
    virtual void HandleWindowScaleFactorChanged(float window_scale_factor) = 0;
  

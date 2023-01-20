@@ -9,7 +9,8 @@ declare namespace Electron {
   enum ProcessType {
     browser = 'browser',
     renderer = 'renderer',
-    worker = 'worker'
+    worker = 'worker',
+    utility = 'utility'
   }
 
   interface App {
@@ -147,12 +148,6 @@ declare namespace Electron {
     _throw(error: Error | string): void;
   }
 
-  const deprecate: ElectronInternal.DeprecationUtil;
-
-  namespace Main {
-    const deprecate: ElectronInternal.DeprecationUtil;
-  }
-
   class View {}
 
   // Experimental views API
@@ -193,21 +188,6 @@ declare namespace Electron {
 }
 
 declare namespace ElectronInternal {
-  type DeprecationHandler = (message: string) => void;
-  interface DeprecationUtil {
-    warnOnce(oldName: string, newName?: string): () => void;
-    setHandler(handler: DeprecationHandler | null): void;
-    getHandler(): DeprecationHandler | null;
-    warn(oldName: string, newName: string): void;
-    log(message: string): void;
-    removeFunction<T extends Function>(fn: T, removedName: string): T;
-    renameFunction<T extends Function>(fn: T, newName: string): T;
-    event(emitter: NodeJS.EventEmitter, oldName: string, newName: string): void;
-    removeProperty<T, K extends (keyof T & string)>(object: T, propertyName: K, onlyForValues?: any[]): T;
-    renameProperty<T, K extends (keyof T & string)>(object: T, oldName: string, newName: K): T;
-    moveAPI<T extends Function>(fn: T, oldUsage: string, newUsage: string): T;
-  }
-
   interface DesktopCapturer {
     startHandling(captureWindow: boolean, captureScreen: boolean, thumbnailSize: Electron.Size, fetchWindowIcons: boolean): void;
     _onerror?: (error: string) => void;
@@ -273,6 +253,18 @@ declare namespace ElectronInternal {
     name: string;
     private?: boolean;
     loader: ModuleLoader;
+  }
+
+  interface UtilityProcessWrapper extends NodeJS.EventEmitter {
+    readonly pid: (number) | (undefined);
+    kill(): boolean;
+    postMessage(message: any, transfer?: any[]): void;
+  }
+
+  interface ParentPort extends NodeJS.EventEmitter {
+    start(): void;
+    pause(): void;
+    postMessage(message: any): void;
   }
 
   class WebViewElement extends HTMLElement {

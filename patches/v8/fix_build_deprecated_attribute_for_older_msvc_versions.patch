@@ -6,10 +6,10 @@ Subject: fix: usage of c++ [[deprecated]] attribute for older msvc versions
 This attribute can only be used in all contexts in Visual Studio 2019
 
 diff --git a/include/v8config.h b/include/v8config.h
-index 6213da2ef434fff934b298eada084647d7a6ddc4..754743b0c82e2ccf9a330d18785f8cb59df80869 100644
+index c79cd04e0f16bcc2bb6e351f54d4d21139645ce8..900bf18ecec88d6482b0291019bdc01f6934a000 100644
 --- a/include/v8config.h
 +++ b/include/v8config.h
-@@ -454,10 +454,13 @@ path. Add it with -I<path> to the command line
+@@ -503,10 +503,13 @@ path. Add it with -I<path> to the command line
  # define V8_NOINLINE /* NOT SUPPORTED */
  #endif
  
@@ -25,7 +25,7 @@ index 6213da2ef434fff934b298eada084647d7a6ddc4..754743b0c82e2ccf9a330d18785f8cb5
  #else
  # define V8_DEPRECATED(message)
  #endif
-@@ -465,13 +468,17 @@ path. Add it with -I<path> to the command line
+@@ -514,7 +517,11 @@ path. Add it with -I<path> to the command line
  
  // A macro (V8_DEPRECATE_SOON) to make it easier to see what will be deprecated.
  #if defined(V8_IMMINENT_DEPRECATION_WARNINGS)
@@ -38,6 +38,8 @@ index 6213da2ef434fff934b298eada084647d7a6ddc4..754743b0c82e2ccf9a330d18785f8cb5
  #else
  # define V8_DEPRECATE_SOON(message)
  #endif
+@@ -548,7 +555,7 @@ path. Add it with -I<path> to the command line
+   END_ALLOW_USE_DEPRECATED()
  
  
 -#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 6)

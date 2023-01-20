@@ -19,9 +19,8 @@
 #include "content/public/browser/desktop_media_id.h"
 #include "shell/browser/api/electron_api_web_contents.h"
 #include "shell/browser/native_browser_view_views.h"
-#include "shell/browser/ui/drag_util.h"
 #include "shell/browser/ui/inspectable_web_contents.h"
-#include "shell/browser/ui/inspectable_web_contents_view.h"
+#include "shell/browser/ui/views/inspectable_web_contents_view_views.h"
 #include "shell/browser/ui/views/root_view.h"
 #include "shell/browser/web_contents_preferences.h"
 #include "shell/browser/web_view_manager.h"
@@ -1495,11 +1494,6 @@ gfx::Rect NativeWindowViews::WindowBoundsToContentBounds(
   return content_bounds;
 }
 
-void NativeWindowViews::UpdateDraggableRegions(
-    const std::vector<mojom::DraggableRegionPtr>& regions) {
-  draggable_region_ = DraggableRegionsToSkRegion(regions);
-}
-
 #if BUILDFLAG(IS_WIN)
 void NativeWindowViews::SetIcon(HICON window_icon, HICON app_icon) {
   // We are responsible for storing the images.
@@ -1600,17 +1594,7 @@ bool NativeWindowViews::ShouldDescendIntoChildForEventHandling(
     const gfx::Point& location) {
   // App window should claim mouse events that fall within any BrowserViews'
   // draggable region.
-  for (auto* view : browser_views()) {
-    auto* native_view = static_cast<NativeBrowserViewViews*>(view);
-    auto* view_draggable_region = native_view->draggable_region();
-    if (view_draggable_region &&
-        view_draggable_region->contains(location.x(), location.y()))
-      return false;
-  }
-
-  // App window should claim mouse events that fall within the draggable region.
-  if (draggable_region() &&
-      draggable_region()->contains(location.x(), location.y()))
+  if (NonClientHitTest(location) != HTNOWHERE)
     return false;
 
   // And the events on border for dragging resizable frameless window.
